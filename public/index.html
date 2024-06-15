@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self'">
+  <!-- Other head elements -->
+  <title>PDF Upload</title>
+</head>
+<body>
+  <h1>Upload PDF</h1>
+  <form action="/upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="pdf" accept=".pdf">
+    <button type="submit">Upload</button>
+  </form>
+
+  <h1>PDF Viewer</h1>
+  <iframe id="pdfViewer" width="100%" height="500px"></iframe>
+
+  <script>
+    const form = document.querySelector('form');
+    const pdfViewer = document.getElementById('pdfViewer');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(form);
+      const response = await fetch('/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const filePath = await response.text();
+        pdfViewer.src = filePath;
+      }
+    });
+  </script>
+</body>
+</html>
